@@ -1,0 +1,64 @@
+%P2_a)Sort a list with keeping double values in resulted list. E.g.: [4 2 6 2 3 4] --> [2 2 3 4 4 6]
+
+% Auxiliary function for inserting the elements that will respect the
+% requirement ( duplicates allowed ) -> inserting at the "head" of the L
+% insert(l1,..,ln , k1,..,km)= k1,..km , if n = 0
+% l1 U insert(l2,..,ln , k1,..,km) , otherwise
+% insert(L:list, K:list,R:list)
+% flow model : (i,i,o)
+
+insert([], K, K).
+insert([H|T], K, [H|R]):-
+    insert(T, K, R).
+
+
+%sort_cond(l1,..,ln, elem)=
+%=elem , if n = 0
+%=elem U l1l2,..,ln , if elem <= l1
+%=l1 U sort_cond(l2,..,ln , elem) , otherwise
+%sort_cond(L-list, e-integer, R-list)
+%flow model : (i,i,o)
+
+sort_cond([], E, [E]).
+% '<=' case because duplicates are allowed
+sort_cond([H|T], E, RI):-
+    E=<H,
+    insert([E], [H|T], RI).
+% '>' case
+sort_cond([H|T], E, RI):-
+    insert([H], R, RI),
+    sort_cond(T, E, R).
+
+%sorting(l1,..,ln)=
+%=[] , if n = 0
+%=sort_cond(sorting(l2,..,ln), l1) , otherwise
+%sorting(L-list, R-list)
+%flow model : (i,o)
+
+sorting([], []).
+sorting([H|T], R1):-
+    sorting(T, R),
+    sort_cond(R, H, R1).
+
+% For a heterogeneous list, formed from integer numbers and list of
+% numbers, write a predicate to sort every sublist, keeping the doubles.
+
+% I will use the predicates from 3a) and predefined predicates for these
+
+% type of lists
+% sortHeterogenous(l1,..,ln)=
+% =[] , if n = 0
+% =sorting(l1) U sortHeterogenous(l2,..,ln) , if l1 = (list)
+% =l1 U sortHeterogenous(l2,..,ln) , otherwise
+
+% sortHeterogenous(L-list, R-result)
+% flow model : (i,o)
+
+sortHeterogenous([], []).
+sortHeterogenous([H|T], [RH|R]):-
+    is_list(H),
+    !,
+    sorting(H,RH),
+    sortHeterogenous(T, R).
+sortHeterogenous([H|T], [H|R]):-
+    sortHeterogenous(T, R).
