@@ -1,0 +1,20 @@
+%count(l1,..,ln, e, col)=
+%=col , if n = 0
+%count(l2,..,ln, e, col) , if n >= 1 && e != l1
+%count(l2,..,ln, e, col+1) , if n >= 1 && e == l1
+%count(L-list, E-element, Col-element)
+%flow model : (i,i,i,o) / (i,i,i,i)
+
+count([], _, Col, Col).
+count([H|T], H, Col, Out):-
+    NewCol is Col+1,
+    count(T, H, NewCol, Out).
+
+count([H|T], Elem, Col, Out):-
+    H =\= Elem, %is mandatory since it would go in both branches and won't count all
+    count(T, Elem, Col, Out).
+
+main(L, E, Out):-
+    Col is 0,
+    count(L, E, Col, Out).
+

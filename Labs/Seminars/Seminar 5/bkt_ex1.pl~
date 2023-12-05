@@ -1,0 +1,51 @@
+%Given a list L, generate the list of all arrangements of k elements
+%from the list that have product P and sum S.
+%[1, 2, 3, 10] k = 2, p = 30 S = 13 ; R=[[3,10], [10,3]]
+%findall(A, arrangement(L, A), R).
+
+%list_sum(l1,..,ln , s)=
+%=0, if n = 0
+%s + l1 + list_sum(l2,..,ln)
+
+%put the elems on all possible positions; that's why we use insert
+%arrangements(l1,..,ln, k)=
+% =insert(l1, arrangements(l2,..,ln , k < 1) , k > 1
+% =arrangements(l2,..,lk), if l1 is skipped
+% =[l1] , k = 1
+
+%insert(l1,..,ln , elem)=
+% = [elem] U list , elem on 1st position
+% = l1 U insert(l2,..,ln , elem) , 2nd, 3rd.. position
+
+list_sum([], 0).
+list_sum([H|T], S1):-
+    list_sum(T, S),
+    S1 is S + H.
+
+list_product([], 1).
+list_product([H|T], P1):-
+    list_product(T, P),
+    P1 is H * P.
+
+inserting(L, Elem, [Elem|L]).
+inserting([H|T], Elem, [H|Out]):-
+    inserting(T, Elem, Out).
+
+arrangements([L|_], 1, [L]).
+arrangements([H|T], K, Out):-
+    K > 1,
+    NewK is K - 1,
+    arrangements(T, NewK, ResT),
+    inserting(ResT, H, Out).
+arrangements([_|T], K, Out):-
+    arrangements(T, K, Out).
+
+solve(L, K, P, S, R):-
+    arrangements(L, K, A),
+    list_sum(A, S),
+    list_product(A, P),
+    R = A.
+
+main(L, K, P, S, AllOut):-
+    solve(Out, solve(L, K, P, S, Out), AllOut).
+

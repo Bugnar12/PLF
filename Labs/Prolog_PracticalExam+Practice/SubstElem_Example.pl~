@@ -1,0 +1,14 @@
+%To substitute we need to create another list
+
+insertion([], L, L).
+insertion([H|T], L, [H|R]):-
+    insertion(T, L, R).
+
+substitute_element([],_,_,[]).
+substitute_element([H|T], E, LR, Res):-
+    H =:= E,
+    insertion(LR, T, R1),
+    substitute_element(R1, E, LR, Res).
+
+substitute_element([H|T], E, LR, [H|Res]):-
+    substitute_element(T, E, LR, Res).

@@ -1,0 +1,4 @@
+lengthList([], 0).
+lengthList([_|T], R):-
+    R is R1 + 1,
+    lengthList(T, R1).

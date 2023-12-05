@@ -1,0 +1,24 @@
+determine_max([H], H).
+determine_max([H|T], Maxi):-
+    determine_max(T, E),
+    Maxi is max(H,E).
+
+new_list([], _).
+new_list([H1, H2|T], E1, E2):-
+    H1 =:= E1,
+    H2 =:= E2,
+    new_list(T, _, _).
+
+unify_main(L1,L2,ResultList):-
+    determine_max(L1,M1),
+    determine_max(L2,M2),
+    ResultList = [M1,M2].
+
+multiply([],[]).
+multiply([H|T], [NewH|NewT]):-
+    NewH is H*2,
+    multiply(T,NewT).
+
+unite_all(L1,L2, RL, RFL):-
+    unify_main(L1,L2,RL),
+    multiply(RL,RFL).
